@@ -16,7 +16,7 @@ import rehypeSlug from "rehype-slug";
 import rehypePrismPlus from "rehype-prism-plus";
 import { serialize } from "next-mdx-remote/serialize";
 
-import siteConfig from "../config/siteConfig";
+import siteConfig from "@/config/siteConfig";
 
 /**
  * Parse a markdown or MDX file to an MDX source form + front matter data
@@ -85,7 +85,7 @@ const parse = async function (source, format, scope) {
               },
             },
           ],
-          [rehypeKatex, { output: "mathml" }],
+          [rehypeKatex, { output: "htmlAndMathml" }],
           [rehypePrismPlus, { ignoreMissing: true }],
         ],
         format,

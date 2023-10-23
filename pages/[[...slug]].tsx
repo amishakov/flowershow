@@ -1,15 +1,14 @@
 import fs from "fs";
-import React from "react";
 import { NextSeo } from "next-seo";
-import { GetStaticProps, GetStaticPaths, GetStaticPropsResult } from "next";
-import { NavItem, NavGroup } from "@portaljs/core";
+import type { GetStaticProps, GetStaticPaths, GetStaticPropsResult } from "next";
+import type { NavItem, NavGroup } from "@portaljs/core";
 
-import MdxPage from "../components/MdxPage";
-import clientPromise from "../lib/mddb.mjs";
-import computeFields from "../lib/computeFields";
-import parse from "../lib/markdown";
+import MdxPage from "@/components/MdxPage";
+import clientPromise from "@/lib/mddb.mjs";
+import computeFields from "@/lib/computeFields";
+import parse from "@/lib/markdown";
+import siteConfig from "@/config/siteConfig";
 import type { CustomAppProps } from "./_app";
-import siteConfig from "../config/siteConfig";
 
 interface SlugPageProps extends CustomAppProps {
     source: any;
@@ -118,7 +117,8 @@ function capitalize(str: string) {
 // we should generate a file with sitemap instead of computing it on the fly for each page
 /* function addPageToGroup(page: MddbFile, sitemap: Array<NavGroup>) { */
 function addPageToSitemap(page: any, sitemap: Array<NavGroup | NavItem>) {
-    const urlParts = page.url_path!.split("/").filter((part) => part);
+    const urlDecoded = decodeURI(page.url_path);
+    const urlParts = urlDecoded!.split("/").filter((part) => part);
     // don't add home page to the sitemap
     if (urlParts.length === 0) return;
     // top level, root pages
@@ -154,7 +154,7 @@ function addPageToSitemap(page: any, sitemap: Array<NavGroup | NavItem>) {
                 .filter(isNavGroup)
                 .find(
                     (group) =>
-                        group.path !== undefined && page.url_path.startsWith(group.path)
+                        group.path !== undefined && decodeURI(page.url_path).startsWith(group.path)
                 );
             if (!matchingGroup) {
                 const newGroup: NavGroup = {

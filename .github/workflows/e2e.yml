@@ -1,15 +1,13 @@
 name: Run E2E Tests
 
 on:
-  push:
-    branches:
-      - main
   pull_request:
     branches:
       - main
 
 jobs:
   test:
+    name: Run E2E Tests
     runs-on: ubuntu-latest
 
     steps:
@@ -19,14 +17,14 @@ jobs:
           repository: datopian/flowershow-template-e2e
 
       - name: Check out Flowershow into test-app
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: test-app
 
       - name: Use Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
-          node-version: '16.x'
+          node-version: '18.x'
 
       - name: Install dependencies for E2E tests
         run: |
@@ -47,7 +45,7 @@ jobs:
         working-directory: test-app
 
       - name: Run the tests
-        run: npm run test
+        run: npx playwright test
 
       - uses: actions/upload-artifact@v3
         if: always()
